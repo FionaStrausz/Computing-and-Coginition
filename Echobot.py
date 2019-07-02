@@ -11,13 +11,20 @@ pattern_responses = {"Do you remember (.*)": ["Of course I remember {}", "No I c
                      "I feel (.*)": ["Why do you feel {}", "You feel {}, why?"]}
 
 
+def swap_pronoun(phrase):
+  if 'me' in phrase:
+    return re.sub('me','you', phrase)
+  elif 'you'in phrase:
+    return re.sub('you', 'I', phrase)
+  else:
+    return phrase
 
 def check_pattern(message):
-  pattern = "Do you remember (.*)"
-  match = re.search(pattern, message)
-  if match:
-    answer = random.choice(pattern_responses[pattern])
-    return answer.format(match.group(1))
+  for pattern in pattern_responses:
+    match = re.search(pattern, message)
+    if match:
+      answer = random.choice(pattern_responses[pattern])
+      return answer.format(swap_pronoun(match.group(1)))
 
 def respond(message):
   if message in responses:
@@ -34,3 +41,4 @@ def send_message(message):
   
 while True:
   send_message(input())
+
